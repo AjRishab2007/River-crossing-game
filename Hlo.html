@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Crossing Puzzle</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f0f9ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #1a365d;
+        }
+
+        .game-container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #4a5568;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .game-board {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            height: 300px;
+        }
+
+        .shore {
+            width: 35%;
+            height: 250px;
+            background: #90EE90;
+            border: 3px solid #8B5E34;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-content: flex-start;
+        }
+
+        .river {
+            width: 25%;
+            height: 100%;
+            background: #4299e1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .boat {
+            width: 100px;
+            height: 50px;
+            background: #8B4513;
+            position: absolute;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            padding: 5px;
+            transition: transform 0.5s ease-in-out;
+            border: 2px solid #6B3410;
+        }
+
+        .boat-left {
+            left: 10px;
+        }
+
+        .boat-right {
+            right: 10px;
+        }
+
+        .item {
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .item:hover {
+            transform: scale(1.1);
+        }
+
+        .item.in-boat {
+            transform: scale(0.8);
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #4299e1;
+            color: white;
+            transition: background 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #2b6cb0;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #ebf8ff;
+            color: #2c5282;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .rules {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ebf8ff;
+            border-radius: 8px;
+        }
+
+        .rules h3 {
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+
+        .rules ul {
+            list-style-position: inside;
+            margin-left: 20px;
+        }
+
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.1) 10px,
+                rgba(255, 255, 255, 0.1) 20px
+            );
+            animation: wave 10s linear infinite;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        @keyframes wave {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        @media (max-width: 768px) {
+            .game-board {
+                flex-direction: column;
+                height: auto;
+                gap: 20px;
+            }
+            
+            .shore {
+                width: 100%;
+                height: 200px;
+            }
+
+            .river {
+                width: 100%;
+                height: 100px;
+            }
+
+            .boat {
+                top: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">River Crossing Puzzle</h1>
+            <p class="subtitle">Help the farmer transport the fox, chicken, and grain across the river safely. But be careful - some combinations can't be left alone!</p>
+        </div>
+
+        <div class="rules">
+            <h3>Rules:</h3>
+            <ul>
+                <li>The farmer must always be in the boat to cross the river</li>
+                <li>The boat can only carry the farmer and one item at a time</li>
+                <li>If left alone, the fox will eat the chicken</li>
+                <li>If left alone, the chicken will eat the grain</li>
+            </ul>
+        </div>
+
+        <div class="game-board">
+            <div class="shore" id="left-shore"></div>
+            <div class="river">
+                <div class="wave"></div>
+                <div class="boat" id="boat" onclick="crossRiver()"></div>
+            </div>
+            <div class="shore" id="right-shore"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="resetGame()">Reset Game</button>
+        </div>
+        <div class="status" id="status"></div>
+
+        <div class="footer">
+            © 2025 AJRISHAB. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        let leftShore = ["farmer", "fox", "chicken", "grain"];
+        let rightShore = [];
+        let boat = [];
+        let isBoatLeft = true;
+
+        function moveToBoat(item) {
+            const statusEl = document.getElementById("status");
+            statusEl.className = "status";
+
+            if (!isBoatLeft && !rightShore.includes(item)) return;
+            if (isBoatLeft && !leftShore.includes(item)) return;
+
+            const currentShore = isBoatLeft ? leftShore : rightShore;
+
+            if (currentShore.includes(item) && boat.length < 2) {
+                if (boat.length === 1 && !boat.includes("farmer") && item !== "farmer") {
+                    statusEl.innerText = "The farmer must be in the boat first!";
+                    statusEl.classList.add("animate__animated", "animate__shakeX");
+                    return;
+                }
+                
+                boat.push(item);
+                currentShore.splice(currentShore.indexOf(item), 1);
+            } else if (boat.includes(item)) {
+                currentShore.push(item);
+                boat.splice(boat.indexOf(item), 1);
+            }
+            updateUI();
+        }
+
+        function crossRiver() {
+            const statusEl = document.getElementById("status");
+            statusEl.className = "status";
+
+            if (!boat.includes("farmer")) {
+                statusEl.innerText = "The farmer must be in the boat!";
+                statusEl.classList.add("animate__animated", "animate__shakeX");
+                return;
+            }
+
+            const boatEl = document.getElementById("boat");
+            isBoatLeft = !isBoatLeft;
+            
+            if (isBoatLeft) {
+                leftShore.push(...boat);
+                boatEl.classList.remove("boat-right");
+                boatEl.classList.add("boat-left");
+            } else {
+                rightShore.push(...boat);
+                boatEl.classList.remove("boat-left");
+                boatEl.classList.add("boat-right");
+            }
+
+            boat = [];
+            setTimeout(checkGameState, 500);
+            updateUI();
+        }
+
+        function checkGameState() {
+            const statusEl = document.getElementById("status");
+            statusEl.className = "status";
+
+            if (rightShore.length === 4) {
+                statusEl.innerText = "🎉 Congratulations! You've solved the puzzle!";
+                statusEl.classList.add("animate__animated", "animate__bounceIn");
+                return;
+            }
+
+            const checkDanger = (shore) => {
+                return (
+                    (shore.includes("fox") && shore.includes("chicken") && !shore.includes("farmer")) ||
+                    (shore.includes("chicken") && shore.includes("grain") && !shore.includes("farmer"))
+                );
+            };
+
+            if (checkDanger(leftShore) || checkDanger(rightShore)) {
+                statusEl.innerText = "❌ Game Over! You left unsafe items alone!";
+                statusEl.classList.add("animate__animated", "animate__shakeX");
+                setTimeout(resetGame, 2000);
+            }
+        }
+
+        function resetGame() {
+            leftShore = ["farmer", "fox", "chicken", "grain"];
+            rightShore = [];
+            boat = [];
+            isBoatLeft = true;
+            const statusEl = document.getElementById("status");
+            statusEl.className = "status";
+            statusEl.innerText = "Start the game! Click on items to move them to the boat.";
+            const boatEl = document.getElementById("boat");
+            boatEl.classList.remove("boat-right");
+            boatEl.classList.add("boat-left");
+            updateUI();
+        }
+
+        function updateUI() {
+            const renderShore = (items) => items
+                .map(item => `
+                    <div class="item" onclick="moveToBoat('${item}')">
+                        ${getEmoji(item)}
+                    </div>
+                `)
+                .join("");
+
+            document.getElementById("left-shore").innerHTML = renderShore(leftShore);
+            document.getElementById("right-shore").innerHTML = renderShore(rightShore);
+            document.getElementById("boat").innerHTML = boat
+                .map(item => `<div class="item in-boat">${getEmoji(item)}</div>`)
+                .join("") || "🛶";
+        }
+
+        function getEmoji(item) {
+            const emojis = {
+                farmer: "👨‍🌾",
+                fox: "🦊",
+                chicken: "🐔",
+                grain: "🌾"
+            };
+            return emojis[item] || "";
+        }
+
+        resetGame();
+    </script>
+</body>
+</html>
