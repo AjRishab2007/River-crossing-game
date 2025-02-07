@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Crossing Puzzle</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">River Crossing Puzzle</h1>
+            <p class="subtitle">Help the farmer transport the fox, chicken, and grain across the river safely. But be careful - some combinations can't be left alone!</p>
+        </div>
+
+        <div class="rules">
+            <h3>Rules:</h3>
+            <ul>
+                <li>The farmer must always be in the boat to cross the river</li>
+                <li>The boat can only carry the farmer and one item at a time</li>
+                <li>If left alone, the fox will eat the chicken</li>
+                <li>If left alone, the chicken will eat the grain</li>
+            </ul>
+        </div>
+
+        <div class="game-board">
+            <div class="shore" id="left-shore"></div>
+            <div class="river">
+                <div class="wave"></div>
+                <div class="boat" id="boat" onclick="crossRiver()"></div>
+            </div>
+            <div class="shore" id="right-shore"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="resetGame()">Reset Game</button>
+        </div>
+        <div class="status" id="status"></div>
+
+        <div class="footer">
+            © 2025 AJRISHAB. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
